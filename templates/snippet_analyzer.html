@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Code Snippet - DocuDecipher{% endblock %}
+
+{% block content %}
+<style>
+    .analyzer-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .analyzer-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .analyzer-header i {
+        font-size: 4rem;
+        color: #fbbf24;
+        margin-bottom: 1rem;
+    }
+    
+    .analyzer-header h1 {
+        color: white;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .analyzer-header p {
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        color: white;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #1e293b;
+        border: 2px solid #334155;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #0cc0df;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(12, 192, 223, 0.1);
+    }
+    
+    .language-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    
+    .lang-btn {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        padding: 0.5rem;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    
+    .lang-btn:hover {
+        border-color: #0cc0df;
+        color: white;
+    }
+    
+    .lang-btn.selected {
+        background: #0cc0df;
+        border-color: #0cc0df;
+        color: white;
+    }
+    
+    .level-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .level-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .level-card:hover {
+        border-color: #0cc0df;
+        transform: translateY(-2px);
+    }
+    
+    .level-card.selected {
+        border-color: #0cc0df;
+        background: rgba(12, 192, 223, 0.1);
+    }
+    
+    .level-card i {
+        font-size: 1.5rem;
+        color: #0cc0df;
+        margin-bottom: 0.5rem;
+    }
+    
+    .level-card h4 {
+        color: white;
+        margin: 0.25rem 0;
+        font-size: 1rem;
+    }
+    
+    .level-card p {
+        color: #94a3b8;
+        margin: 0;
+        font-size: 0.75rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        background: #0cc0df;
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        background: #0aa8c4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(12, 192, 223, 0.2);
+    }
+    
+    .btn-primary i {
+        margin-right: 0.5rem;
+    }
+    
+    .char-counter {
+        text-align: right;
+        color: #64748b;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .language-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .level-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="analyzer-container">
+    <div class="analyzer-header">
+        <i class="fas fa-code"></i>
+        <h1>Analyze Code Snippet</h1>
+        <p>Paste any code for plain English explanation</p>
+    </div>
+    
+    <div class="card">
+        <form action="/process-snippet" method="POST">
+            <!-- Language Selection -->
+            <div class="form-group">
+                <label><i class="fas fa-tag" style="color: #0cc0df;"></i> Language (optional)</label>
+                <div class="language-selector" id="languageSelector">
+                    <div class="lang-btn" onclick="selectLanguage('python')">Python</div>
+                    <div class="lang-btn" onclick="selectLanguage('javascript')">JavaScript</div>
+                    <div class="lang-btn" onclick="selectLanguage('typescript')">TypeScript</div>
+                    <div class="lang-btn" onclick="selectLanguage('java')">Java</div>
+                    <div class="lang-btn" onclick="selectLanguage('go')">Go</div>
+                    <div class="lang-btn" onclick="selectLanguage('rust')">Rust</div>
+                    <div class="lang-btn" onclick="selectLanguage('cpp')">C++</div>
+                    <div class="lang-btn" onclick="selectLanguage('csharp')">C#</div>
+                    <div class="lang-btn" onclick="selectLanguage('php')">PHP</div>
+                    <div class="lang-btn" onclick="selectLanguage('ruby')">Ruby</div>
+                    <div class="lang-btn" onclick="selectLanguage('swift')">Swift</div>
+                    <div class="lang-btn" onclick="selectLanguage('sql')">SQL</div>
+                </div>
+                <input type="hidden" id="language" name="language" value="auto">
+                <p class="help-text" style="color: #64748b; font-size: 0.85rem; margin-top: 0.5rem;">
+                    Auto-detected if not specified
+                </p>
+            </div>
+            
+            <!-- Code Input -->
+            <div class="form-group">
+                <label for="code">
+                    <i class="fas fa-paste" style="color: #0cc0df;"></i> Paste your code *
+                </label>
+                <textarea 
+                    id="code" 
+                    name="code" 
+                    rows="12"
+                    placeholder="# Paste your code here...
+def hello_world():
+    print('Hello, world!')"
+                    required
+                ></textarea>
+                <div class="char-counter" id="charCount">0/10000 characters</div>
+            </div>
+            
+            <!-- Knowledge Level -->
+            <div class="form-group">
+                <label><i class="fas fa-brain" style="color: #0cc0df;"></i> Your knowledge level</label>
+                <div class="level-selector" id="levelSelector">
+                    <div class="level-card" data-level="novice" onclick="selectLevel('novice')">
+                        <i class="fas fa-seedling"></i>
+                        <h4>Novice</h4>
+                        <p>New to programming</p>
+                    </div>
+                    <div class="level-card" data-level="general" onclick="selectLevel('general')">
+                        <i class="fas fa-user"></i>
+                        <h4>General</h4>
+                        <p>Basic understanding</p>
+                    </div>
+                    <div class="level-card" data-level="educated" onclick="selectLevel('educated')">
+                        <i class="fas fa-user-graduate"></i>
+                        <h4>Educated</h4>
+                        <p>Some coding experience</p>
+                    </div>
+                    <div class="level-card selected" data-level="professional" onclick="selectLevel('professional')">
+                        <i class="fas fa-briefcase"></i>
+                        <h4>Professional</h4>
+                        <p>Experienced developer</p>
+                    </div>
+                </div>
+                <input type="hidden" id="level" name="level" value="professional">
+            </div>
+            
+            <!-- Specific Questions -->
+            <div class="form-group">
+                <label for="specific_questions">
+                    <i class="fas fa-question-circle" style="color: #0cc0df;"></i> Specific questions (optional)
+                </label>
+                <textarea 
+                    id="specific_questions" 
+                    name="specific_questions" 
+                    rows="4"
+                    placeholder="• What does this code do?
+• Are there any bugs?
+• How can I improve it?"
+                ></textarea>
+            </div>
+            
+            <!-- Hidden field for doc_type -->
+            <input type="hidden" name="doc_type" value="functions">
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-search"></i> Analyze Code
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function selectLevel(level) {
+        document.getElementById('level').value = level;
+        
+        document.querySelectorAll('.level-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        document.querySelector(`.level-card[data-level="${level}"]`).classList.add('selected');
+    }
+    
+    function selectLanguage(lang) {
+        document.getElementById('language').value = lang;
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+    }
+    
+    // Character counter
+    document.getElementById('code').addEventListener('input', function(e) {
+        const count = e.target.value.length;
+        document.getElementById('charCount').textContent = count + '/10000 characters';
+        if (count > 10000) {
+            e.target.value = e.target.value.substring(0, 10000);
+            document.getElementById('charCount').textContent = '10000/10000 characters (limit reached)';
+        }
+    });
+</script>
+{% endblock %}
