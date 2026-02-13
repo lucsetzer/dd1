@@ -1,0 +1,18 @@
+/* static/css/reset.css - CORRECTED */
+
+/* White background everywhere */
+body, html, div, section, main, article, .container, 
+.wrapper, .content, .page, .app, [class*="bg-"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+}
+
+/* ENSURE dark text for contrast */
+body, html, div, p, h1, h2, h3, h4, h5, h6, span, a, label {
+  color: #1f2937 !important;  /* Dark gray for readability */
+}
+
+/* Specifically kill any white text on now-white background */
+* {
+  color: #1f2937 !important;  /* Nuclear option if needed */
+}

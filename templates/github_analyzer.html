@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .github-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .github-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .github-header i {
+        font-size: 4rem;
+        color: #0cc0df;
+        margin-bottom: 1rem;
+    }
+    
+    .github-header h1 {
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    
+    .github-header p {
+        color: #9ca3af;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        color: white;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #1f222a;
+        border: 2px solid #374151;
+        border-radius: 8px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: #0cc0df;
+        outline: none;
+    }
+    
+    .form-group input::placeholder {
+        color: #6b7280;
+    }
+    
+    .pattern-hint {
+        background: rgba(12, 192, 223, 0.1);
+        border-left: 4px solid #0cc0df;
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+    
+    .pattern-hint code {
+        background: #2d3748;
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        color: #0cc0df;
+    }
+    
+    .level-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .level-card {
+        background: #1f222a;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .level-card:hover {
+        border-color: #0cc0df;
+        transform: translateY(-2px);
+    }
+    
+    .level-card.selected {
+        border-color: #0cc0df;
+        background: rgba(12, 192, 223, 0.1);
+    }
+    
+    .level-card i {
+        font-size: 1.5rem;
+        color: #0cc0df;
+        margin-bottom: 0.5rem;
+    }
+    
+    .level-card h4 {
+        color: white;
+        margin: 0.5rem 0;
+        font-size: 1rem;
+    }
+    
+    .level-card p {
+        color: #9ca3af;
+        margin: 0;
+        font-size: 0.8rem;
+    }
+    
+    .submit-btn {
+        background: #0cc0df;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        background: #0aa8c4;
+        transform: translateY(-2px);
+    }
+    
+    .submit-btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .example-urls {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+    
+    .example-urls h4 {
+        color: white;
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .example-urls ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .example-urls li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .example-urls a {
+        color: #0cc0df;
+        text-decoration: none;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+    
+    .example-urls a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="github-container">
+    <div class="github-header">
+        <i class="fab fa-github"></i>
+        <h1>Analyze GitHub Repository</h1>
+        <p>Clone and analyze any public GitHub repository</p>
+    </div>
+    
+    <form action="/process-github" method="POST">
+        <!-- Repository URL -->
+        <div class="form-group">
+            <label for="repo_url">
+                <i class="fas fa-link"></i> Repository URL *
+            </label>
+            <input 
+                type="url" 
+                id="repo_url" 
+                name="repo_url" 
+                placeholder="https://github.com/username/repository"
+                required
+            >
+        </div>
+        
+        <!-- Branch -->
+        <div class="form-group">
+            <label for="branch">
+                <i class="fas fa-code-branch"></i> Branch
+            </label>
+            <input 
+                type="text" 
+                id="branch" 
+                name="branch" 
+                value="main"
+                placeholder="main, master, develop, etc."
+            >
+            <p style="color: #9ca3af; font-size: 0.85rem; margin-top: 0.5rem;">
+                Defaults to 'main' if not specified
+            </p>
+        </div>
+        
+        <!-- File Patterns -->
+        <div class="form-group">
+            <label for="include_patterns">
+                <i class="fas fa-filter"></i> File patterns to analyze
+            </label>
+            <input 
+                type="text" 
+                id="include_patterns" 
+                name="include_patterns" 
+                value="*.py,*.js,*.json,*.md,*.yml,*.html,*.css"
+            >
+            <div class="pattern-hint">
+                <i class="fas fa-info-circle"></i> 
+                Separate patterns with commas. Examples: 
+                <code>*.py</code>, <code>*.js</code>, <code>Dockerfile</code>, <code>*.config.js</code>
+            </div>
+        </div>
+        
+        <!-- Knowledge Level -->
+        <div class="form-group">
+            <label><i class="fas fa-brain"></i> Your knowledge level</label>
+            <div class="level-selector" id="levelSelector">
+                <div class="level-card" data-level="novice" onclick="selectLevel('novice')">
+                    <i class="fas fa-seedling"></i>
+                    <h4>Novice</h4>
+                    <p>New to programming</p>
+                </div>
+                <div class="level-card" data-level="general" onclick="selectLevel('general')">
+                    <i class="fas fa-user"></i>
+                    <h4>General</h4>
+                    <p>Basic tech knowledge</p>
+                </div>
+                <div class="level-card" data-level="educated" onclick="selectLevel('educated')">
+                    <i class="fas fa-user-graduate"></i>
+                    <h4>Educated</h4>
+                    <p>Some coding experience</p>
+                </div>
+                <div class="level-card selected" data-level="professional" onclick="selectLevel('professional')">
+                    <i class="fas fa-briefcase"></i>
+                    <h4>Professional</h4>
+                    <p>Experienced developer</p>
+                </div>
+            </div>
+            <input type="hidden" id="level" name="level" value="professional">
+        </div>
+        
+        <!-- Specific Questions -->
+        <div class="form-group">
+            <label for="specific_questions">
+                <i class="fas fa-question-circle"></i> Specific questions (optional)
+            </label>
+            <textarea 
+                id="specific_questions" 
+                name="specific_questions" 
+                rows="4"
+                placeholder="• What does this codebase do?
+• How are the components organized?
+• Are there any security concerns?
+• What's the complexity like?"
+            ></textarea>
+        </div>
+        
+        <!-- Hidden fields -->
+        <input type="hidden" name="doc_type" value="github">
+        
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">
+            <i class="fas fa-search"></i> Analyze Repository
+        </button>
+    </form>
+    
+    <div class="example-urls">
+        <h4><i class="fas fa-flask"></i> Test with public repositories:</h4>
+        <ul>
+            <li><a href="#" onclick="setExample('https://github.com/fastapi/fastapi')">🔹 fastapi/fastapi</a></li>
+            <li><a href="#" onclick="setExample('https://github.com/pallets/flask')">🔹 pallets/flask</a></li>
+            <li><a href="#" onclick="setExample('https://github.com/tiangolo/full-stack-fastapi-template')">🔹 Full-stack FastAPI template</a></li>
+            <li><a href="#" onclick="setExample('https://github.com/psf/requests')">🔹 psf/requests</a></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function selectLevel(level) {
+        // Update hidden input
+        document.getElementById('level').value = level;
+        
+        // Update UI
+        document.querySelectorAll('.level-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        document.querySelector(`.level-card[data-level="${level}"]`).classList.add('selected');
+    }
+    
+    function setExample(url) {
+        document.getElementById('repo_url').value = url;
+        // Scroll to form
+        document.getElementById('repo_url').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const repo = document.getElementById('repo_url').value;
+        if (!repo.includes('github.com')) {
+            if (!confirm('This doesn\'t look like a GitHub URL. Continue anyway?')) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insufficient Tokens - DocuDecipher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0cc0df;
+            --dark-bg: #0a0a0f;
+            --card-bg: #151521;
+        }
+        body { background: var(--dark-bg); color: #e2e8f0; font-family: sans-serif; padding: 2rem; }
+        .card { background: var(--card-bg); max-width: 500px; margin: 3rem auto; padding: 2rem; border-radius: 12px; text-align: center; border: 1px solid #2d3748; }
+        .token-display { font-size: 3rem; color: var(--primary); font-weight: bold; margin: 1rem 0; }
+        .btn { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; display: inline-block; margin: 0.5rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1><i class="fas fa-coins" style="color: #ef4444;"></i> Need More Tokens</h1>
+        <p>{{ app_name }} requires <strong>{{ required }} tokens</strong>.</p>
+        
+        <div class="token-display">
+            {{ balance }}<small style="font-size: 1rem; color: #94a3b8;">/{{ required }}</small>
+        </div>
+        
+        <p>You have <strong>{{ balance }} tokens</strong> available.</p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="/dashboard" class="btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="/settings" class="btn">
+                <i class="fas fa-arrow-up"></i> Upgrade Plan
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: rgba(12, 192, 223, 0.1); border-radius: 8px;">
+            <p><i class="fas fa-lightbulb"></i> <strong>Free Tier</strong> gets 15 tokens monthly</p>
+            <p><i class="fas fa-rocket"></i> <strong>Student Plan</strong>: 75 tokens for $9.99/month</p>
+        </div>
+    </div>
+</body>
+</html>

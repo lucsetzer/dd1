@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Generated Prompt - DocuDecipher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0cc0df;
+            --dark-bg: #0a0a0f;
+            --card-bg: #151521;
+        }
+        body { background: var(--dark-bg); color: #e2e8f0; font-family: sans-serif; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: var(--card-bg); padding: 2rem; border-radius: 12px; border: 1px solid #2d3748; margin-bottom: 1rem; }
+        .btn { background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; display: inline-block; margin: 0.5rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .prompt-box { background: #1e293b; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary); margin: 1.5rem 0; white-space: pre-wrap; font-family: monospace; }
+        .success-badge { background: rgba(34, 197, 94, 0.1); color: #22c55e; padding: 0.5rem 1rem; border-radius: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1><i class="fas fa-check-circle" style="color: #22c55e;"></i> Prompt Generated!</h1>
+                <p style="color: #94a3b8;">Your AI prompt is ready to use</p>
+            </div>
+            <div>
+                <span class="success-badge">
+                    <i class="fas fa-coins"></i> {{ tokens_spent }} tokens spent
+                </span>
+            </div>
+        </header>
+        
+        <div class="card">
+            <h2>Your Input</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                <div>
+                    <strong>Goal:</strong><br>
+                    <span style="color: #94a3b8;">{{ goal }}</span>
+                </div>
+                <div>
+                    <strong>Audience:</strong><br>
+                    <span style="color: #94a3b8;">{{ audience }}</span>
+                </div>
+                <div>
+                    <strong>Platform:</strong><br>
+                    <span style="color: #94a3b8;">{{ platform }}</span>
+                </div>
+                <div>
+                    <strong>Style & Tone:</strong><br>
+                    <span style="color: #94a3b8;">{{ style }}, {{ tone }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2><i class="fas fa-magic"></i> Generated Prompt</h2>
+            <div class="prompt-box">{{ generated_prompt }}</div>
+            
+            <div style="margin-top: 2rem;">
+                <button onclick="copyToClipboard()" class="btn-outline">
+                    <i class="fas fa-copy"></i> Copy to Clipboard
+                </button>
+                <a href="/prompt-wizard" class="btn-outline">
+                    <i class="fas fa-redo"></i> Generate Another
+                </a>
+                <a href="/dashboard" class="btn">
+                    <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3><i class="fas fa-lightbulb"></i> How to use this prompt:</h3>
+            <ul style="color: #94a3b8; margin: 0.5rem 0 0 1rem;">
+                <li>Copy and paste into ChatGPT, Claude, or Gemini</li>
+                <li>Adjust specific details for your use case</li>
+                <li>Test with different AI models for varied results</li>
+                <li>Save successful prompts for future reuse</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+    function copyToClipboard() {
+        const promptText = `{{ generated_prompt }}`;
+        navigator.clipboard.writeText(promptText).then(() => {
+            alert('Prompt copied to clipboard!');
+        });
+    }
+    </script>
+</body>
+</html>

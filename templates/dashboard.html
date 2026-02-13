@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .welcome-section {
+        margin-bottom: 3rem;
+    }
+
+    .welcome-section h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-section p {
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #334155;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+        float: right;
+        color: #0cc0df;
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .action-card {
+        background: #1e293b;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid #334155;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+    .action-card:hover {
+        border-color: #0cc0df;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(12, 192, 223, 0.15);
+    }
+
+    .action-icon {
+        font-size: 2rem;
+        color: #0cc0df;
+        margin-bottom: 1rem;
+    }
+
+    .action-title {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .action-desc {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    .recent-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .recent-header h2 {
+        color: white;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .view-all {
+        color: #0cc0df;
+        text-decoration: none;
+    }
+
+    .view-all:hover {
+        text-decoration: underline;
+    }
+
+    .recent-list {
+        background: #1e293b;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        overflow: hidden;
+    }
+
+    .recent-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #334155;
+    }
+
+    .recent-item:last-child {
+        border-bottom: none;
+    }
+
+    .recent-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(12, 192, 223, 0.1);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0cc0df;
+        margin-right: 1rem;
+    }
+
+    .recent-info {
+        flex: 1;
+    }
+
+    .recent-name {
+        color: white;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .recent-meta {
+        color: #94a3b8;
+        font-size: 0.85rem;
+    }
+
+    .recent-badge {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: #1e293b;
+        border-radius: 12px;
+        border: 1px solid #334155;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: #64748b;
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        color: white;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-text {
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .action-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Welcome back{% if email %}, {{ email.split('@')[0] }}{% endif %}.</h1>
+        <p>What would you like to understand today?</p>
+    </div>
+
+    <!-- Usage Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-chart-simple stat-icon"></i>
+            <div class="stat-value">{{ analyses_used|default(0) }}/{{ analyses_limit|default(5) }}</div>
+            <div class="stat-label">Analyses this month</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-code-branch stat-icon"></i>
+            <div class="stat-value">{{ repo_count|default(0) }}</div>
+            <div class="stat-label">Repos analyzed</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-shield stat-icon"></i>
+            <div class="stat-value">{{ security_scans|default(0) }}</div>
+            <div class="stat-label">Security scans</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-clock stat-icon"></i>
+            <div class="stat-value">{{ api_calls|default(0) }}</div>
+            <div class="stat-label">API docs</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="action-grid">
+        <a href="/analyze/github" class="action-card">
+            <div class="action-icon">
+                <i class="fab fa-github"></i>
+            </div>
+            <div class="action-title">Analyze Repository</div>
+            <div class="action-desc">Clone and understand any public GitHub repo</div>
+        </a>
+        <a href="/analyze/security" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="action-title">Security Audit</div>
+            <div class="action-desc">Find vulnerabilities, secrets, and misconfigurations</div>
+        </a>
+        <a href="/wizard" class="action-card">
+            <div class="action-icon">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="action-title">Code Analysis</div>
+            <div class="action-desc">Paste code or technical documentation</div>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="recent-header">
+        <h2>Recent analyses</h2>
+        {% if recent_analyses %}
+            <a href="/history" class="view-all">View all →</a>
+        {% endif %}
+    </div>
+
+    {% if recent_analyses %}
+        <div class="recent-list">
+            {% for item in recent_analyses %}
+            <div class="recent-item">
+                <div class="recent-icon">
+                    {% if item.type == 'github' %}
+                        <i class="fab fa-github"></i>
+                    {% elif item.type == 'security' %}
+                        <i class="fas fa-shield-alt"></i>
+                    {% else %}
+                        <i class="fas fa-code"></i>
+                    {% endif %}
+                </div>
+                <div class="recent-info">
+                    <div class="recent-name">{{ item.name }}</div>
+                    <div class="recent-meta">{{ item.date }} • {{ item.duration }}</div>
+                </div>
+                {% if item.is_mock %}
+                    <span class="recent-badge">Mock</span>
+                {% endif %}
+                <a href="/result/{{ item.id }}" style="color: #0cc0df; margin-left: 1rem;">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="empty-title">No analyses yet</div>
+            <div class="empty-text">Start by analyzing a GitHub repository or running a security scan</div>
+            <a href="/analyze/github" class="btn btn-primary">
+                <i class="fab fa-github"></i> Analyze your first repo
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

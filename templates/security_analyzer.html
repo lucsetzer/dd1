@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .security-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .security-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .security-header i {
+        font-size: 4rem;
+        color: #dc2626;
+        margin-bottom: 1rem;
+    }
+    
+    .security-header h1 {
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    
+    .security-header p {
+        color: #9ca3af;
+    }
+    
+    .scan-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .scan-card {
+        background: #1f222a;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .scan-card:hover {
+        border-color: #dc2626;
+        transform: translateY(-2px);
+    }
+    
+    .scan-card.selected {
+        border-color: #dc2626;
+        background: rgba(220, 38, 38, 0.1);
+    }
+    
+    .scan-card i {
+        font-size: 2rem;
+        color: #dc2626;
+        margin-bottom: 0.75rem;
+    }
+    
+    .scan-card h4 {
+        color: white;
+        margin: 0.5rem 0;
+    }
+    
+    .scan-card p {
+        color: #9ca3af;
+        margin: 0;
+        font-size: 0.85rem;
+    }
+    
+    .input-methods {
+        display: flex;
+        border-bottom: 2px solid #374151;
+        margin: 2rem 0 1.5rem;
+    }
+    
+    .method-btn {
+        flex: 1;
+        padding: 0.75rem;
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .method-btn.active {
+        color: #dc2626;
+        border-bottom: 2px solid #dc2626;
+    }
+    
+    .method-btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .tab-content {
+        margin-top: 1.5rem;
+    }
+    
+    .severity-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-right: 0.5rem;
+    }
+    
+    .severity-critical { background: #7f1d1d; color: #fecaca; }
+    .severity-high { background: #991b1b; color: #fee2e2; }
+    .severity-medium { background: #854d0e; color: #fef9c3; }
+    .severity-low { background: #166534; color: #dcfce7; }
+    
+    .security-note {
+        background: rgba(220, 38, 38, 0.1);
+        border-left: 4px solid #dc2626;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-top: 2rem;
+    }
+</style>
+
+<div class="security-container">
+    <div class="security-header">
+        <i class="fas fa-shield-alt"></i>
+        <h1>Security Audit</h1>
+        <p>Scan code for vulnerabilities, hardcoded secrets, and security issues</p>
+    </div>
+    
+    <!-- Scan Type Selection -->
+    <div class="scan-options">
+        <div class="scan-card selected" onclick="selectScan('full')">
+            <i class="fas fa-shield-virus"></i>
+            <h4>Full Audit</h4>
+            <p>All security checks</p>
+        </div>
+        <div class="scan-card" onclick="selectScan('secrets')">
+            <i class="fas fa-key"></i>
+            <h4>Secrets</h4>
+            <p>API keys, passwords, tokens</p>
+        </div>
+        <div class="scan-card" onclick="selectScan('dependencies')">
+            <i class="fas fa-box"></i>
+            <h4>Dependencies</h4>
+            <p>Vulnerable packages</p>
+        </div>
+    </div>
+    
+    <!-- Input Method Tabs -->
+    <div class="input-methods">
+        <button class="method-btn active" onclick="showMethod('paste')">
+            <i class="fas fa-paste"></i> Paste Code
+        </button>
+        <button class="method-btn" onclick="showMethod('file')">
+            <i class="fas fa-upload"></i> Upload File
+        </button>
+        <button class="method-btn" onclick="showMethod('github')">
+            <i class="fab fa-github"></i> GitHub Repo
+        </button>
+    </div>
+    
+    <!-- Paste Tab -->
+    <div id="paste-tab" class="tab-content">
+        <form action="/process-security" method="POST">
+            <input type="hidden" name="scan_type" id="scan_type" value="full">
+            
+            <div class="form-group">
+                <label for="code">Paste code to analyze:</label>
+                <textarea 
+                    id="code" 
+                    name="code" 
+                    rows="10"
+                    placeholder="# Paste your code here...
+api_key = 'sk-1234567890'
+password = 'admin123'
+# etc."
+                    style="width: 100%; padding: 1rem; background: #1f222a; border: 2px solid #374151; border-radius: 8px; color: white; font-family: monospace;"
+                    required
+                ></textarea>
+            </div>
+            
+            <div style="margin: 1.5rem 0;">
+                <label style="display: block; color: white; margin-bottom: 0.5rem;">
+                    <i class="fas fa-flag"></i> Severity threshold:
+                </label>
+                <select name="threshold" style="width: 100%; padding: 0.75rem; background: #1f222a; border: 2px solid #374151; border-radius: 8px; color: white;">
+                    <option value="low">Show all issues (including low severity)</option>
+                    <option value="medium" selected>Medium+ severity only</option>
+                    <option value="high">High+ severity only</option>
+                    <option value="critical">Critical only</option>
+                </select>
+            </div>
+            
+            <button type="submit" style="background: #dc2626; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; width: 100%; font-size: 1.1rem; cursor: pointer;">
+                <i class="fas fa-shield"></i> Run Security Scan
+            </button>
+        </form>
+    </div>
+    
+    <!-- File Upload Tab (hidden by default) -->
+    <div id="file-tab" class="tab-content" style="display: none;">
+        <form action="/process-security-upload" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="scan_type" id="scan_type_file" value="full">
+            
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="font-size: 3rem; color: #dc2626; margin-bottom: 1rem;">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <p style="color: #9ca3af;">Upload source code files (.py, .js, .php, .go, etc.)</p>
+            </div>
+            
+            <div class="form-group">
+                <input 
+                    type="file" 
+                    name="file" 
+                    accept=".py,.js,.php,.go,.rs,.java,.cpp,.c,.rb,.env,.json,.yml"
+                    required
+                    style="width: 100%; padding: 1rem; background: #1f222a; border: 2px dashed #dc2626; border-radius: 8px; color: white;"
+                >
+            </div>
+            
+            <button type="submit" style="background: #dc2626; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; width: 100%; font-size: 1.1rem; cursor: pointer; margin-top: 1rem;">
+                <i class="fas fa-shield"></i> Upload & Scan
+            </button>
+        </form>
+    </div>
+    
+    <!-- GitHub Tab (hidden by default) -->
+    <div id="github-tab" class="tab-content" style="display: none;">
+        <form action="/process-github-security" method="POST">
+            <input type="hidden" name="scan_type" id="scan_type_github" value="full">
+            
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <i class="fab fa-github" style="font-size: 3rem; color: #dc2626;"></i>
+                <p style="color: #9ca3af; margin-top: 0.5rem;">Scan an entire repository for security issues</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="repo_url">Repository URL:</label>
+                <input 
+                    type="url" 
+                    id="repo_url" 
+                    name="repo_url" 
+                    placeholder="https://github.com/username/repository"
+                    style="width: 100%; padding: 0.75rem; background: #1f222a; border: 2px solid #374151; border-radius: 8px; color: white;"
+                    required
+                >
+            </div>
+            
+            <button type="submit" style="background: #dc2626; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; width: 100%; font-size: 1.1rem; cursor: pointer; margin-top: 1rem;">
+                <i class="fas fa-shield"></i> Scan Repository
+            </button>
+        </form>
+    </div>
+    
+    <div class="security-note">
+        <i class="fas fa-info-circle" style="color: #dc2626;"></i>
+        <strong style="color: white;">Note:</strong> 
+        <span style="color: #9ca3af;">Security scans detect common vulnerabilities but are not a substitute for professional security auditing. Always follow security best practices.</span>
+    </div>
+</div>
+
+<script>
+    function selectScan(type) {
+        document.getElementById('scan_type').value = type;
+        document.getElementById('scan_type_file').value = type;
+        document.getElementById('scan_type_github').value = type;
+        
+        document.querySelectorAll('.scan-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+    }
+    
+    function showMethod(method) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        
+        // Show selected tab
+        document.getElementById(method + '-tab').style.display = 'block';
+        
+        // Update button states
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+    }
+</script>
+{% endblock %}

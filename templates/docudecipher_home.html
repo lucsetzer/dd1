@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .landing-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .hero {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .hero-icon {
+        font-size: 4rem;
+        color: #fbbf24;
+        margin-bottom: 1rem;
+    }
+    
+    .hero h1 {
+        color: #0cc0df;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .hero p {
+        font-size: 1.25rem;
+        color: #9ca3af;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin: 3rem 0;
+    }
+    
+    .feature-card {
+        background: #1f222a;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .feature-card:hover {
+        border-color: #0cc0df;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(12, 192, 223, 0.15);
+    }
+    
+    .feature-card i {
+        font-size: 2.5rem;
+        color: #0cc0df;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-card h3 {
+        color: white;
+        margin: 1rem 0 0.5rem;
+    }
+    
+    .feature-card p {
+        color: #9ca3af;
+        margin: 0 0 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .feature-link {
+        color: #0cc0df;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
+    .feature-link:hover {
+        text-decoration: underline;
+    }
+    
+    .analysis-types {
+        background: rgba(12, 192, 223, 0.05);
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 3rem 0;
+    }
+    
+    .types-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .type-badge {
+        background: rgba(12, 192, 223, 0.1);
+        border-radius: 8px;
+        padding: 0.75rem;
+        text-align: center;
+        color: white;
+        font-size: 0.9rem;
+    }
+    
+    .type-badge i {
+        color: #0cc0df;
+        margin-right: 0.5rem;
+    }
+    
+    .workflow {
+        display: flex;
+        justify-content: space-between;
+        margin: 3rem 0;
+        position: relative;
+    }
+    
+    .workflow::before {
+        content: '';
+        position: absolute;
+        top: 30px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: #374151;
+        z-index: 0;
+    }
+    
+    .workflow-step {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        flex: 1;
+    }
+    
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: #1f222a;
+        border: 3px solid #0cc0df;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: #0cc0df;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+    
+    .step-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .step-desc {
+        color: #9ca3af;
+        font-size: 0.85rem;
+        max-width: 150px;
+        margin: 0 auto;
+    }
+    
+    .cta-button {
+        display: inline-block;
+        background: #0cc0df;
+        color: white;
+        padding: 1rem 3rem;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .cta-button:hover {
+        background: #0aa8c4;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(12, 192, 223, 0.3);
+    }
+    
+    .cta-button i {
+        margin-right: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+        .types-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .workflow {
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .workflow::before {
+            display: none;
+        }
+    }
+</style>
+
+<div class="landing-container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <h1>DocuDecipher</h1>
+        <p>
+            Understand any codebase, API documentation, or technical system 
+            in plain English. Perfect for legacy code, onboarding, and security audits.
+        </p>
+    </div>
+    
+    <!-- Input Methods -->
+    <div class="feature-grid">
+        <div class="feature-card">
+            <i class="fas fa-code"></i>
+            <h3>Paste Code</h3>
+            <p>Python, JavaScript, Go, Rust, Java, and 20+ languages</p>
+            <a href="/wizard?mode=paste" class="feature-link">Analyze →</a>
+        </div>
+        
+        <div class="feature-card">
+            <i class="fab fa-github"></i>
+            <h3>GitHub Repo</h3>
+            <p>Clone and analyze entire repositories</p>
+            <a href="/analyze/github" class="feature-link">Connect →</a>
+        </div>
+        
+        <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Security Audit</h3>
+            <p>Find hardcoded secrets, vulnerabilities, and misconfigurations</p>
+            <a href="/analyze/security" class="feature-link">Scan →</a>
+        </div>
+    </div>
+    
+    <!-- Analysis Types -->
+    <div class="analysis-types">
+        <h3 style="color: white; text-align: center; margin-top: 0;">
+            <i class="fas fa-bolt" style="color: #0cc0df;"></i> 
+            What can we analyze?
+        </h3>
+        
+        <div class="types-grid">
+            <div class="type-badge">
+                <i class="fas fa-code-branch"></i> GitHub Repos
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-file-code"></i> API Documentation
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-history"></i> Legacy Code
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-lock"></i> Security Vulnerabilities
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-project-diagram"></i> Dependency Maps
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-cogs"></i> Configuration Files
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-function"></i> Function Analysis
+            </div>
+            <div class="type-badge">
+                <i class="fas fa-book"></i> Technical Docs
+            </div>
+        </div>
+    </div>
+    
+    <!-- How It Works -->
+    <h2 style="color: white; text-align: center; margin: 3rem 0 2rem;">
+        From legacy code to clarity in 4 steps
+    </h2>
+    
+    <div class="workflow">
+        <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-title">Choose Analysis Type</div>
+            <div class="step-desc">GitHub, security, API, or code snippet</div>
+        </div>
+        
+        <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-title">Set Knowledge Level</div>
+            <div class="step-desc">Novice → Professional</div>
+        </div>
+        
+        <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-title">Input Your Code</div>
+            <div class="step-desc">Paste, upload, or GitHub URL</div>
+        </div>
+        
+        <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-title">Get Insights</div>
+            <div class="step-desc">Plain English analysis & recommendations</div>
+        </div>
+    </div>
+    
+    <!-- Target Audience -->
+    <div style="display: flex; justify-content: center; gap: 2rem; margin: 3rem 0; flex-wrap: wrap;">
+        <div style="text-align: center;">
+            <i class="fas fa-user-graduate" style="font-size: 1.5rem; color: #0cc0df;"></i>
+            <p style="color: white; margin: 0.5rem 0 0;">Junior Developers</p>
+        </div>
+        <div style="text-align: center;">
+            <i class="fas fa-code-branch" style="font-size: 1.5rem; color: #0cc0df;"></i>
+            <p style="color: white; margin: 0.5rem 0 0;">Legacy Code Inheritors</p>
+        </div>
+        <div style="text-align: center;">
+            <i class="fas fa-shield-virus" style="font-size: 1.5rem; color: #0cc0df;"></i>
+            <p style="color: white; margin: 0.5rem 0 0;">Security Teams</p>
+        </div>
+        <div style="text-align: center;">
+            <i class="fas fa-chart-line" style="font-size: 1.5rem; color: #0cc0df;"></i>
+            <p style="color: white; margin: 0.5rem 0 0;">Technical Managers</p>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div style="text-align: center; margin: 4rem 0 2rem;">
+        <a href="/wizard" class="cta-button">
+            <i class="fas fa-magic"></i> Start Analyzing
+        </a>
+        <p style="color: #6b7280; margin-top: 1rem; font-size: 0.9rem;">
+            No credit card required • Free tier available • API key optional for testing
+        </p>
+    </div>
+</div>
+{% endblock %}

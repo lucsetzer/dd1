@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DocuDecipher{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/brand.css">  
+    <!-- BRAND CSS - LOADS LAST, WINS EVERYTHING -->
+<link rel="stylesheet" href="/static/css/brand.css">
+<style>
+    /* NUCLEAR RESET - OVERRIDES EVERY PAGE */
+    body, html {
+        background-color: #0f172a !important;
+        color: white !important;
+    }
+    
+    .navbar, nav, header {
+        background: #0f172a !important;
+        border-bottom: 1px solid #1e293b !important;
+    }
+    
+    .nav-links a {
+        color: #94a3b8 !important;
+    }
+    
+    .nav-links a:hover {
+        color: #0cc0df !important;
+        background: #1e293b !important;
+    }
+    
+    /* KILL ALL WHITE BACKGROUNDS EVERYWHERE */
+    div, section, main, article, aside, footer {
+        background-color: transparent !important;
+    }
+    
+    /* CARDS SHOULD BE NAVY LIGHT */
+    .card, [class*="card"], [class*="Card"] {
+        background: #1e293b !important;
+        border: 1px solid #334155 !important;
+    }
+    
+    /* FIX NAVBAR LOGO TEXT */
+    .logo span, .logo a, [class*="logo"] {
+        color: white !important;
+    }
+    
+    /* LIGHTBULB STAYS YELLOW */
+    .fa-lightbulb, .fas.fa-lightbulb {
+        color: #fbbf24 !important;
+    }
+</style>
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+    <!-- NAVBAR (add this - it's missing!) -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-lightbulb" style="color: #fbbf24;"></i>
+            <span style="color: white; font-weight: 600;">DocuDecipher</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+            <li><a href="/docudecipher-home" class="nav-link">Analyze</a></li>
+            <li><a href="/settings" class="nav-link">Settings</a></li>
+            <li><a href="/logout" class="nav-link">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER (optional) -->
+    <footer style="text-align: center; padding: 2rem; color: #64748b;">
+        <p>© 2025 DocuDecipher — Understand any codebase in minutes.</p>
+    </footer>
+</body>
+</html>

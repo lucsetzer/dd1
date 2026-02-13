@@ -1,0 +1,36 @@
+/* static/css/theme.css - Centralized theme control */
+
+:root {
+  /* Brand colors - change ONLY these */
+  --primary-color: #0f172a;    /* New brand blue */
+  --secondary-color: #64748b;  /* New brand purple */
+  --background-color: #ffffff; /* WHITE background */
+  --text-color: #1f2937;       /* Dark text for contrast */
+  --card-bg: #f9fafb;          /* Light cards */
+  
+  /* Accessibility */
+  --font-size-base: 16px;
+  --line-height: 1.5;
+}
+
+/* Dark mode option for later */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #0f172a;
+    --text-color: #f9fafb;
+    --card-bg: #64748b;
+  }
+}
+
+/* Apply to whole site */
+body {
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+}
+
+/* Override any black backgrounds */
+.container, .main, .content, .app {
+  background-color: var(--background-color) !important;
+}
